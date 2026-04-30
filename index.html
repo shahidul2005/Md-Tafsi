@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Md Tafsi | Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* RESET */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    /* TOKENS */
+    :root {
+      --bg:      #03070f;
+      --gold:    #d4a853;
+      --gold2:   #f0c878;
+      --white:   #eeeae2;
+      --dim:     #68687e;
+      --border:  rgba(212,168,83,0.18);
+      --card:    rgba(255,255,255,0.03);
+    }
+
+    /* BASE */
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* STARFIELD */
+    #stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 60px;
+      transition: background 0.4s, backdrop-filter 0.4s, border-color 0.4s;
+      border-bottom: 1px solid transparent;
+    }
+    nav.sticky {
+      background: rgba(3,7,15,0.85);
+      backdrop-filter: blur(18px);
+      border-bottom-color: var(--border);
+    }
+    .brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 38px; }
+    .nav-links a {
+      font-size: 0.73rem;
+      font-weight: 500;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--dim);
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 7px 22px;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 36px;
+      opacity: 0;
+      animation: rise 0.8s ease forwards 0.2s;
+    }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0.3; }
+    }
+
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(4rem, 12vw, 10rem);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -3px;
+      margin-bottom: 30px;
+      opacity: 0;
+      animation: rise 1s ease forwards 0.45s;
+    }
+    .line1 { display: block; color: var(--white); }
+    .line2 {
+      display: block;
+      -webkit-text-stroke: 2px var(--gold);
+      color: transparent;
+    }
+
+    .hero-desc {
+      max-width: 480px;
+      font-size: 0.98rem;
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--dim);
+      margin-bottom: 52px;
+      opacity: 0;
+      animation: rise 1s ease forwards 0.7s;
+    }
+    .hero-desc b { color: var(--white); font-weight: 500; }
+
+    .btns {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0;
+      animation: rise 1s ease forwards 0.95s;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.76rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 3px;
+      transition: transform 0.25s, box-shadow 0.25s, background 0.25s, color 0.25s, border-color 0.25s;
+    }
+    .btn-gold { background: var(--gold); color: #03070f; border: 2px solid var(--gold); }
+    .btn-gold:hover { background: var(--gold2); border-color: var(--gold2); transform: translateY(-3px); box-shadow: 0 14px 44px rgba(212,168,83,0.3); }
+    .btn-outline { background: transparent; color: var(--white); border: 2px solid rgba(255,255,255,0.15); }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-3px); }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      opacity: 0;
+      animation: rise 1s ease forwards 1.4s;
+    }
+    .scroll-hint span { font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase; color: var(--dim); }
+    .scroll-line {
+      width: 1px;
+      height: 44px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: linepulse 2s ease-in-out infinite;
+    }
+    @keyframes linepulse { 0%,100%{opacity:0.25} 50%{opacity:1} }
+
+    /* SECTIONS */
+    .wrap {
+      position: relative;
+      z-index: 10;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 110px 24px;
+    }
+    .s-label { font-size: 0.67rem; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+    .s-title { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 700; line-height: 1.1; margin-bottom: 14px; }
+    .s-line { width: 50px; height: 2px; background: var(--gold); margin-bottom: 52px; }
+
+    /* ABOUT */
+    .about-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 60px; align-items: start; }
+    .para { font-size: 0.95rem; font-weight: 300; line-height: 1.95; color: #8a8aaa; }
+    .para + .para { margin-top: 18px; }
+    .para b { color: var(--white); font-weight: 500; }
+    .facts { display: flex; flex-direction: column; gap: 18px; }
+    .fact {
+      padding: 18px 22px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--card);
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .fact:hover { border-color: var(--gold); transform: translateX(6px); }
+    .fact-k { font-size: 0.62rem; letter-spacing: 3px; text-transform: uppercase; color: var(--dim); margin-bottom: 5px; }
+    .fact-v { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--white); }
+
+    /* SKILLS */
+    .skills { display: flex; flex-wrap: wrap; gap: 12px; }
+    .chip {
+      padding: 9px 22px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-size: 0.73rem;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--dim);
+      background: var(--card);
+      cursor: default;
+      transition: color 0.3s, border-color 0.3s, background 0.3s, transform 0.3s;
+    }
+    .chip:hover { color: var(--gold); border-color: var(--gold); background: rgba(212,168,83,0.06); transform: translateY(-3px); }
+
+    /* CARDS */
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .card {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 38px 28px 32px;
+      background: var(--card);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.35s, transform 0.35s, box-shadow 0.35s;
+    }
+    .card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(145deg, rgba(212,168,83,0.07), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.35s;
+    }
+    .card:hover { border-color: var(--gold); transform: translateY(-8px); box-shadow: 0 28px 70px rgba(0,0,0,0.45); }
+    .card:hover::after { opacity: 1; }
+    .card-icon { font-size: 1.9rem; margin-bottom: 22px; position: relative; z-index: 1; }
+    .card-tag { font-size: 0.62rem; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; position: relative; z-index: 1; }
+    .card-title { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; color: var(--white); margin-bottom: 12px; position: relative; z-index: 1; }
+    .card-desc { font-size: 0.81rem; font-weight: 300; line-height: 1.7; color: var(--dim); flex: 1; position: relative; z-index: 1; }
+    .card-arrow { margin-top: 26px; font-size: 0.7rem; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 8px; position: relative; z-index: 1; transition: gap 0.3s; }
+    .card:hover .card-arrow { gap: 16px; }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 10;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 36px 24px;
+    }
+    footer p { font-size: 0.76rem; font-weight: 300; color: var(--dim); letter-spacing: 1px; }
+    footer span { color: var(--gold); }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.75s ease, transform 0.75s ease; }
+    .reveal.show { opacity: 1; transform: translateY(0); }
+
+    /* ANIMATION */
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 18px 24px; }
+      .nav-links { display: none; }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="stars"></canvas>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="#" class="brand">Md Tafsi</a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#connect">Connect</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="badge"><div class="dot"></div> BBA Student &nbsp;·&nbsp; Pacific States University</div>
+    <h1 class="hero-name">
+      <span class="line1">Md</span>
+      <span class="line2">Tafsi</span>
+    </h1>
+    <p class="hero-desc">
+      Passionate about <b>branding</b>, <b>digital marketing</b>, and building strategies that move businesses forward. International student. Future business leader.
+    </p>
+    <div class="btns">
+      <a href="#connect" class="btn btn-gold">View My Links</a>
+      <a href="https://www.linkedin.com/in/md-shahidul-islam-082349349" target="_blank" class="btn btn-outline">LinkedIn Profile</a>
+    </div>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <div class="wrap" id="about">
+    <div class="reveal">
+      <div class="s-label">Who I Am</div>
+      <h2 class="s-title">Business student.<br>Global perspective.</h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="about-grid reveal">
+      <div>
+        <p class="para">I'm <b>Md Tafsi</b>, a BBA Business student at <b>Pacific States University</b>. My academic journey is driven by a deep curiosity about how brands communicate, grow, and create real impact in competitive markets.</p>
+        <p class="para">As an international student in the United States, I bring a <b>cross-cultural perspective</b> to everything I do — from analyzing branding strategies to building digital projects from the ground up.</p>
+        <p class="para">My goal is to merge business strategy with modern marketing thinking to help organizations grow with purpose and clarity.</p>
+      </div>
+      <div class="facts">
+        <div class="fact"><div class="fact-k">University</div><div class="fact-v">Pacific States University</div></div>
+        <div class="fact"><div class="fact-k">Degree</div><div class="fact-v">BBA — Business</div></div>
+        <div class="fact"><div class="fact-k">Focus Area</div><div class="fact-v">Marketing &amp; Branding</div></div>
+        <div class="fact"><div class="fact-k">Location</div><div class="fact-v">United States &#127482;&#127480;</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="wrap" id="skills" style="padding-top:0;">
+    <div class="reveal">
+      <div class="s-label">What I Know</div>
+      <h2 class="s-title">Skills &amp; Strengths</h2>
+      <div class="s-line"></div>
+      <div class="skills">
+        <div class="chip">Digital Marketing</div>
+        <div class="chip">Branding Strategy</div>
+        <div class="chip">Business Development</div>
+        <div class="chip">Market Analysis</div>
+        <div class="chip">Consumer Behavior</div>
+        <div class="chip">HTML &amp; CSS</div>
+        <div class="chip">Microsoft Office</div>
+        <div class="chip">Communication</div>
+        <div class="chip">Leadership</div>
+        <div class="chip">Strategic Thinking</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONNECT -->
+  <div class="wrap" id="connect">
+    <div class="reveal">
+      <div class="s-label">Let's Connect</div>
+      <h2 class="s-title">Find Me Here</h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="cards reveal">
+
+      <a href="resume.html" target="_blank" class="card">
+        <div class="card-icon">&#128196;</div>
+        <div class="card-tag">Document</div>
+        <div class="card-title">Resume</div>
+        <div class="card-desc">My full professional resume — education, projects, and skills all in one place.</div>
+        <div class="card-arrow">Open Resume <span>&#8594;</span></div>
+      </a>
+
+      <a href="https://www.linkedin.com/in/md-shahidul-islam-082349349" target="_blank" class="card">
+        <div class="card-icon">&#128188;</div>
+        <div class="card-tag">Professional Network</div>
+        <div class="card-title">LinkedIn</div>
+        <div class="card-desc">Connect with me professionally and explore my academic background and network.</div>
+        <div class="card-arrow">View Profile <span>&#8594;</span></div>
+      </a>
+
+      <a href="https://github.com/shahidul2005" target="_blank" class="card">
+        <div class="card-icon">&#9889;</div>
+        <div class="card-tag">Code &amp; Projects</div>
+        <div class="card-title">GitHub</div>
+        <div class="card-desc">Explore my repositories, web projects, and technical work on GitHub.</div>
+        <div class="card-arrow">View GitHub <span>&#8594;</span></div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Crafted by <span>Md Tafsi</span> &nbsp;&middot;&nbsp; Pacific States University &nbsp;&middot;&nbsp; <span>2025</span></p>
+  </footer>
+
+  <script>
+    /* Starfield */
+    (function () {
+      var canvas = document.getElementById('stars');
+      var ctx = canvas.getContext('2d');
+      var W, H, stars = [];
+
+      function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+
+      function init() {
+        stars = [];
+        for (var i = 0; i < 160; i++) {
+          stars.push({ x: Math.random()*W, y: Math.random()*H, r: Math.random()*1.2+0.2, o: Math.random()*0.5+0.1, s: Math.random()*0.3+0.05 });
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        for (var i = 0; i < stars.length; i++) {
+          var s = stars[i];
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+          ctx.fillStyle = 'rgba(212,168,83,' + s.o + ')';
+          ctx.fill();
+          s.y += s.s;
+          if (s.y > H) { s.y = 0; s.x = Math.random()*W; }
+        }
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', function(){ resize(); init(); });
+      resize(); init(); draw();
+    })();
+
+    /* Sticky nav */
+    var nav = document.getElementById('nav');
+    window.addEventListener('scroll', function(){ nav.classList.toggle('sticky', window.scrollY > 50); });
+
+    /* Scroll reveal */
+    var reveals = document.querySelectorAll('.reveal');
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(function(el){ io.observe(el); });
+
+    /* Mouse glow */
+    if (window.innerWidth > 800) {
+      var glow = document.createElement('div');
+      glow.style.cssText = 'position:fixed;pointer-events:none;z-index:5;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,83,0.05) 0%,transparent 70%);transform:translate(-50%,-50%);transition:left 0.12s ease,top 0.12s ease;';
+      document.body.appendChild(glow);
+      document.addEventListener('mousemove', function(e){ glow.style.left = e.clientX+'px'; glow.style.top = e.clientY+'px'; });
+    }
+  </script>
+</body>
+</html>
